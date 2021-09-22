@@ -1,10 +1,12 @@
-FROM nginx:stable
+FROM nginx:mainline-alpine
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
 RUN touch /var/run/nginx.pid && \
-  chown -R www-data:www-data /var/run/nginx.pid && \
-  chown -R www-data:www-data /var/cache/nginx
+  chgrp -R 0 /var/run/nginx.pid && \
+  chgrp -R /var/cache/nginx && \
+  chmod g=u /var/run/nginx.pid && \
+  chmod -R g=u /var/cache/nginx
 
 RUN mkdir -p /opt/potree/
 
@@ -13,4 +15,4 @@ COPY index.html /opt/potree/
 
 COPY version.txt /opt/potree/
 
-USER www-data
+USER 11200
